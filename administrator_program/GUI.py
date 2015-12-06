@@ -43,40 +43,39 @@ class GUI():
 		print(os.getcwd())
 		cmd = ["sudo", "python3", "test.py"]
 		self.monitor_pro = subprocess.Popen(cmd,  preexec_fn=os.setsid)
+		os.chdir("../administrator_program")
 		
 		
 
 	def stop_monitor(self, event):
-		os.chdir("/home/pi/python_lab/assignment/activity_monitor/")
+		os.chdir("../activity_monitor/")
 		# self.monitor.kill()
 		os.killpg(self.monitor_pro.pid, signal.SIGTERM)
 		print("stopping")
+		os.chdir("../administrator_program")
 
 
 	def start_server(self, event):
-		print("server running on port 3000.")
-		os.chdir("/home/pi/python_lab/assignment/flaskServer/")
+		print("server running on localhost:3000 or [IP]:3000.")
+		os.chdir("../flaskServer/")
 		cmd = ["sudo", "python", "server.py"]
 		self.server_pro = subprocess.Popen(cmd,  preexec_fn=os.setsid)
+		os.chdir("../administrator_program")
 
 
 	def stop_server(self, event):
 		print("stop_server")
-		os.chdir("/home/pi/python_lab/assignment/flaskServer/")
+		os.chdir("../flaskServer/")
 		os.killpg(self.server_pro.pid, signal.SIGTERM)
+		os.chdir("../administrator_program")
 
 	def delete_images(self, event):
-		print("delete imehes")
-		# folder = ''
-		# for the_file in os.listdir(folder):
-  #   		file_path = os.path.join(folder, the_file)
-  #   		try:
-  #       		if os.path.isfile(file_path):
-  #           		os.unlink(file_path)
-  #       		#elif os.path.isdir(file_path): shutil.rmtree(file_path)
-  #   		except Exception, e:
-  #       		print e
-
+		print("deleting images")
+		os.chdir("../flaskServer/static/camera/")
+		filelist = [ f for f in os.listdir(".") if f.endswith(".jpg") ]
+		for f in filelist:
+			os.remove(f)
+		os.chdir("../../../administrator_program")
 
 
 def main():
