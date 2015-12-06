@@ -5,12 +5,14 @@ from MonitorFSM import *
 #import custom made class for drawing shapes on the sensehat
 import DrawShapes as DRAW
 import time
+import camera as CAM
 try:
 	import RPi.GPIO as GPIO
 except RuntimeError:
 		print('Error importing RPi.GPIO!\n',
 			  'This is probably because you need superuser privileges.\n',
 			  'You can achieve this by using "sudo" to run your script')
+import SendData as SEND
 
 
 class GUI(Tk):
@@ -95,7 +97,9 @@ class GUI(Tk):
 			self.message_label.configure(text="")
 			# print(self.fsm.state)
 		elif output == "alarmed":
-			print("call the code from part 2 of the assignment")
+			# print("call the code from part 2 of the assignment")
+			# SEND.sendEmail()
+			CAM.take_pic()
 
 
 	def change_to_activated(self):

@@ -2,6 +2,8 @@ from tkinter import *
 import subprocess
 import signal
 import os
+import shutil
+
 
 class GUI():
 	def __init__(self, parent):
@@ -64,7 +66,16 @@ class GUI():
 		os.killpg(self.server_pro.pid, signal.SIGTERM)
 
 	def delete_images(self, event):
-		print("delete_images")
+		print("delete imehes")
+		# folder = ''
+		# for the_file in os.listdir(folder):
+  #   		file_path = os.path.join(folder, the_file)
+  #   		try:
+  #       		if os.path.isfile(file_path):
+  #           		os.unlink(file_path)
+  #       		#elif os.path.isdir(file_path): shutil.rmtree(file_path)
+  #   		except Exception, e:
+  #       		print e
 
 
 

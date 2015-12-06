@@ -15,13 +15,13 @@ import datetime
 def sendTweet():
     credentials = open("./credentials/twitter_credentials.txt").read().splitlines()
 
-    your_screen_name='XXXXXXXXX'
+    your_screen_name = credentials[0]
 
     # twitter credentials - edit yours here
-    api_token='XXXXXXXXXXXXXXXXXXX'
-    api_secret='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-    access_token='XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-    access_token_secret='FXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+    api_token = credentials[1]
+    api_secret = credentials[2]
+    access_token = credentials[3]
+    access_token_secret = credentials[4]
 
     twitter=Twython(api_token, api_secret, access_token, access_token_secret)
 
