@@ -1,115 +1,111 @@
-#test class for Monitor program (part 1 of three)
-
-from tkinter import *
+''' 
+Author : Pierpaolo Lucarelli 
+Tests for the activity monitor
+'''
 from MonitorFSM import *
-#import custom made class for drawing shapes on the sensehat
-import DrawShapes as DRAW
-import time
-import camera as CAM
-try:
-	import RPi.GPIO as GPIO
-except RuntimeError:
-		print('Error importing RPi.GPIO!\n',
-			  'This is probably because you need superuser privileges.\n',
-			  'You can achieve this by using "sudo" to run your script')
-import SendData as SEND
 
 
-class GUI(Tk):
+def correct_code_sequence():
+	print("correct code sequence test\n")
+	# define list of inputs to test the FSM
+	testInputs = ['Up', 'Down', 'Left', 'Right']
+	# construct and initialise FSM
+	ts = MonitorFSM()
+	ts.start()
+	# display start state
+	print('Start state:', ts.state)
+	# display all state transitions prompted by
+	# the specified list of test inputs
+	for total_state in ts.transduce(testInputs):
+		# display input, output, next state
+		print(('In: {0[0]:<20s}'+
+			  'Out: {0[1]:<10s}'+
+			  'Next state: {0[2]:<10s}')
+			  .format(total_state))
 
-	IRSENSOR = 33 # IR sensor on pin 33
-
-	def __init__(self):
-		super().__init__()
-		
-		self.geometry('300x200')
-		self.configure(background="black")
-		# self.text = Text(self, background='black', foreground='white', font=('Comic Sans MS', 12))
-		# self.text.pack()
-		self.header = Label(self, text = "IR sensor alarm", fg = "red" ,background='black')
-		self.header.pack()
-
-		self.state_label = Label(self, text = "DEACTIVATED", fg = "red", background='black',font=("Helvetica", 16))
-		self.state_label.pack(pady=(70,0))
-
-		self.message_label = Label(self, text = "", fg = "red", background='black',font=("Helvetica", 16))
-		self.message_label.pack()
-
-		self.bind('<KeyPress>', self._onKeyPress) # if any key is pressed call _onKeyPress
-
-
-		# use P1 header pin numbering convention
-		GPIO.setmode(GPIO.BOARD)
-
-		# configure pin 33 as input
-		GPIO.setup(GUI.IRSENSOR, GPIO.IN)
-
-		#call _IRSensorEvevt when ir signal recieved        
-		GPIO.add_event_detect(GUI.IRSENSOR, GPIO.RISING, callback=self._IRSensorEvent)
-
-		# create instance of monitor FSM and initialize to deactivated
-		self.fsm = MonitorFSM()
-		self.fsm.start()
-		# draw a cross for the inital deactivated state
-		DRAW._drawCross()
+def incorrect_code_sequence():
+	print("incorrect code sequence test\n")
+	# define list of inputs to test the FSM
+	testInputs = ['Up', 'Down', 'key', 'Right']
+	# construct and initialise FSM
+	ts = MonitorFSM()
+	ts.start()
+	# display start state
+	print('Start state:', ts.state)
+	# display all state transitions prompted by
+	# the specified list of test inputs
+	for total_state in ts.transduce(testInputs):
+		# display input, output, next state
+		print(('In: {0[0]:<20s}'+
+			  ' Out: {0[1]:<10s}'+
+			  ' Next state: {0[2]:<10s}')
+			  .format(total_state))
 
 
+def correct_code_for_deactivating():
+	print("correct code sequence for deactivating\n")
+	# define list of inputs to test the FSM
+	testInputs = ["Up", "Down", "Left", "Right"]
+	# construct and initialise FSM
+	ts = MonitorFSM()
+	ts.start()
+	ts.state = "activated"
+	# display start state
+	print('Start state:', ts.state)
+	# display all state transitions prompted by
+	# the specified list of test inputs
+	for total_state in ts.transduce(testInputs):
+		# display input, output, next state
+		print(('In: {0[0]:<20s}'+
+			  ' Out: {0[1]:<10s}'+
+			  ' Next state: {0[2]:<10s}')
+			  .format(total_state))	
+
+def incorrect_code_for_deactivating():
+	print("incorrect code sequence for deactivating\n")
+	# define list of inputs to test the FSM
+	testInputs = ["Up", "Down", "Up", "Right"]
+	# construct and initialise FSM
+	ts = MonitorFSM()
+	ts.start()
+	ts.state = "activated"
+	# display start state
+	print('Start state:', ts.state)
+	# display all state transitions prompted by
+	# the specified list of test inputs
+	for total_state in ts.transduce(testInputs):
+		# display input, output, next state
+		print(('In: {0[0]:<20s}'+
+			  ' Out: {0[1]:<10s}'+
+			  ' Next state: {0[2]:<10s}')
+			  .format(total_state))	
+
+def take_pic_test():
+	print("take picture test\n")
+	# define list of inputs to test the FSM
+	testInputs = ["IRSens"]
+	# construct and initialise FSM
+	ts = MonitorFSM()
+	ts.start()
+	ts.state = "activated"
+	# display start state
+	print('Start state:', ts.state)
+	# display all state transitions prompted by
+	# the specified list of test inputs
+	for total_state in ts.transduce(testInputs):
+		# display input, output, next state
+		print(('In: {0[0]:<20s}'+
+			  ' Out: {0[1]:<10s}'+
+			  ' Next state: {0[2]:<10s}')
+			  .format(total_state))	
 
 
-	def _onKeyPress(self, event):
-		if self.fsm.state != "deactivated-in-trans":
-			# print(event.keysym)
-			output = self.fsm.step(event.keysym)
-			# print (output)
-			self._process(output);
-
-	def _IRSensorEvent(self, channel):
-		if self.fsm.state == "activated" or self.fsm.state == "activated-trans":
-			print (self.fsm.state)
-			output = self.fsm.step("IRSens")
-			self._process(output)
-
-
-
-	# from given output call the correct response 
-	def _process(self, output):
-		if output == "cross":
-			DRAW._drawCross()
-			self.state_label.configure(text="DEACTIVATED", fg="red")
-			self.message_label.configure(text="", fg="red")
-		elif output == "right_arrow":
-			DRAW._draw_rigth_arrow()
-			self.state_label.configure(text="DEACTIVATED:")
-			self.message_label.configure(text="> waiting for user input...")
-		elif output == "left_arrow":
-			DRAW._draw_left_arrow()
-			self.state_label.configure(text="ACTIVATED:")
-			self.message_label.configure(text="> Waiting for user input...")
-		elif output == "empty_circle_red":
-			self.state_label.configure(text="DEACTIVATED:")
-			self.message_label.configure(text="Monitor will become active in 60 seconds.")
-			DRAW._draw_empty_circle()
-			self.after(5000, DRAW._draw_full_circle)
-			self.after(5001, self.change_to_activated)
-		elif output == "full_circle_green":
-			DRAW._draw_full_circle()
-			self.state_label.configure(text="ACTIVATED")
-			self.message_label.configure(text="")
-			# print(self.fsm.state)
-		elif output == "alarmed":
-			# print("call the code from part 2 of the assignment")
-			# SEND.sendEmail()
-			CAM.take_pic()
-
-
-	def change_to_activated(self):
-		self.state_label.configure(text = "ACTIVATED", fg = "green")
-		self.message_label.configure(text="", fg = "green")
-		self.fsm.state = "activated"
-
-		
+def main():
+	correct_code_sequence()
+	incorrect_code_sequence()
+	correct_code_for_deactivating()
+	incorrect_code_for_deactivating()
+	take_pic_test()
 
 if __name__ == '__main__':
-	app = GUI()
-	app.mainloop()
-	GPIO.cleanup()
+	main()

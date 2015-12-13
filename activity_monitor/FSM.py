@@ -1,6 +1,9 @@
-# file: lab09_example1/FSM.py
-# Base class (superclass) for inheritance hierarchy
-# of state machine implementations
+''' 
+Author : Pierpaolo Lucarelli 
+MonitorFSM class taht extends the FSM class.
+this class ir sesponsible for handling the I/O of the machine
+Give a certain type of input and the correct type of output will be send
+'''
 class FSM:
     def start(self):
         self.state = self.startState
@@ -20,18 +23,8 @@ class FSM:
     # next state
     def transduce(self, inputs):
         # initialise the FSM
-        self.start()
         # now run FSM through a serious of state changes
         # prompted by inputs to the FSM
         return [(str(inp), self.step(inp), self.state) \
                 for inp in inputs]
-    '''
-    # Another version of method transduce implemented as a Python generator 
-    def transduce(self, inputs):
-        for inp in inputs:
-            outp = self.step(inp)
-            # problem printing None as string is solved (2 ways) below
-            #yield (inp if inp else 'None', outp, self.state)
-            yield (str(inp), outp, self.state)
-    '''
     

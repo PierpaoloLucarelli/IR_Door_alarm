@@ -1,3 +1,7 @@
+''' 
+Author : Pierpaolo Lucarelli 
+Takes pictures when take_pic() is called
+'''
 import picamera
 import datetime
 import os
@@ -21,4 +25,3 @@ def take_pic():
 		camera.close()
 		os.chdir("../../../activity_monitor")
 	print('Image captured')
-

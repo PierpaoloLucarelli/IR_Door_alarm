@@ -2,7 +2,7 @@
 Author : Pierpaolo Lucarelli 
 MonitorFSM class taht extends the FSM class.
 this class ir sesponsible for handling the I/O of the machine
-Give a certain type of input the correct type of output will be send
+Give a certain type of input and the correct type of output will be send
 '''
 from FSM import *
 
@@ -15,7 +15,7 @@ class MonitorFSM(FSM):
         if state == 'deactivated' or state == "deactivated-trans":
             if inp == "Up" or inp == "Down" or inp == "Left" or inp == "Right":
                 self.check_code(inp) 
-                print("Code state: %s" % self.codeState)
+                # print("Code state: %s" % self.codeState)
                 if self.codeState == 0:
                     return ("deactivated", "cross")
                 elif self.codeState in (1,2,3): 
@@ -36,7 +36,7 @@ class MonitorFSM(FSM):
 
             if inp == "Up" or inp == "Down" or inp == "Left" or inp == "Right":
                 self.check_code(inp) 
-                print("Code state: %s" % self.codeState)
+                # print("Code state: %s" % self.codeState)
                 if self.codeState == 0:
                     return ("activated", "full_circle_green") #if code is incorrect return to activated state
                 elif self.codeState in (1,2,3):
@@ -49,6 +49,8 @@ class MonitorFSM(FSM):
                 self.codeState = 0
                 return ("activated", "full_circle_green") #return to activated state
 
+
+    #this function gets called when a key is entered, check if the sequience of theese key is Up, Down, Left, Right
     def check_code(self,inp):
         if self.codeState == 0:
             if inp == "Up":
@@ -67,7 +69,7 @@ class MonitorFSM(FSM):
                 self.codeState = 0
         elif self.codeState == 3:
             if inp == "Right":
-                self.codeState = "accepted"
+                self.codeState = "accepted" #change state of codeState to accepted when sequence is correct
             else:
                 self.codeState = 0
         else:
@@ -75,26 +77,6 @@ class MonitorFSM(FSM):
 
 
 
-
-
-        
-
-# unit test
-# if __name__ == '__main__':
-#     # define list of inputs to test the FSM
-#     testInputs = ['buttonClick', 'IRSensorEvent', 'IRSensorEvent', 'buttonClick']
-#     # construct and initialise FSM
-#     ts = IntruderAlarmFSM()
-#     # display start state
-#     print('Start state:', ts.startState)
-#     # display all state transitions prompted by
-#     # the specified list of test inputs
-#     for total_state in ts.transduce(testInputs):
-#         # display input, output, next state
-#         print(('In: {0[0]:<20s} '+
-#               'Out: {0[1]:<10s} '+
-#               'Next state: {0[2]:<10s}')
-#               .format(total_state))
                
 
     

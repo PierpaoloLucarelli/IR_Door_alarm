@@ -1,8 +1,12 @@
+''' 
+Author : Pierpaolo Lucarelli 
+Administrator Pannel 
+Runs and Kills processes for the monitor and server 
+'''
 from tkinter import * 
 import subprocess
 import signal
 import os
-import shutil
 
 
 class GUI():
@@ -41,7 +45,7 @@ class GUI():
 		print(os.getcwd())
 		os.chdir("../activity_monitor/")
 		print(os.getcwd())
-		cmd = ["sudo", "python3", "test.py"]
+		cmd = ["sudo", "python3", "main.py"]
 		self.monitor_pro = subprocess.Popen(cmd,  preexec_fn=os.setsid)
 		os.chdir("../administrator_program")
 		
@@ -56,7 +60,7 @@ class GUI():
 
 
 	def start_server(self, event):
-		print("server running on localhost:3000 or [IP]:3000.")
+		print("server running on localhost:5000 or [IP]:5000.")
 		os.chdir("../flaskServer/")
 		cmd = ["sudo", "python", "server.py"]
 		self.server_pro = subprocess.Popen(cmd,  preexec_fn=os.setsid)
@@ -80,7 +84,7 @@ class GUI():
 
 def main():
 	root = Tk()
-	root.title()
+	root.title("Administrator pannel")
 	root.resizable(width=FALSE, height=FALSE)
 	app = GUI(root)
 	root.mainloop()
